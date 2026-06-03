@@ -12,5 +12,5 @@ export interface Task {
 export interface BoardState {
   tasks: Task[],
   searchQuery: string,
-  filterPriority: 'all' | 'low' | 'medium' | 'high'
+  selectedPriorities:  ('low' | 'medium' | 'high')[]
 }

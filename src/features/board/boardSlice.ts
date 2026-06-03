@@ -29,7 +29,7 @@ const initialState: BoardState = {
     }
   ],
   searchQuery: '',
-  filterPriority: 'all'
+  selectedPriorities: []
 }
 
 type MoveTaskPayload = {
@@ -56,9 +56,12 @@ export const boardSlice = createSlice({
     },
     setSearchQuery(state, action: PayloadAction<string>) {
       state.searchQuery = action.payload
+    },
+    setPrioritiesFilter(state, action: PayloadAction<('low' | 'medium' | 'high')[]>) {
+      state.selectedPriorities = action.payload
     }
   }
 })
 
-export const {addTask, deleteTasks, moveTask, setSearchQuery} = boardSlice.actions
+export const {addTask, deleteTasks, moveTask, setSearchQuery, setPrioritiesFilter} = boardSlice.actions
 export default boardSlice.reducer

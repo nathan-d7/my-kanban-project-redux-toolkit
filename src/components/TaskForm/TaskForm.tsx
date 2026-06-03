@@ -18,24 +18,50 @@ const TaskForm: FC<TaskFormProps> = ({onClose}) => {
     priority: 'low' as 'low' | 'medium' | 'high'
   })
 
+  const [errors, setErrors] = useState({
+    title: '',
+    description: ''
+  })
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const {name, value} = e.target
+    setErrors(prev => ({ ...prev, [name]: '' }))
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
   }
 
+  const validateForm = () => {
+
+    const localErrors = {
+      title: !formData.title.trim() ? 'Title is required' : '',
+      description: !formData.description.trim() ? 'Description is required' : ''
+    }
+
+    if(localErrors.title || localErrors.description) {
+      setErrors(localErrors)
+      return false
+    }
+
+    return true
+      
+  }
+
+  const dispatch = useAppDispatch()
+
   const options: Intl.DateTimeFormatOptions = {
     month: 'long',
     day: 'numeric'
   }
 
-  const dispatch = useAppDispatch()
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    const isValidated = validateForm()
+    if(!isValidated) return
+
     dispatch(addTask(
       {
         id: crypto.randomUUID(),
@@ -43,6 +69,7 @@ const TaskForm: FC<TaskFormProps> = ({onClose}) => {
         status: 'todo',
         createdAt: new Date().toLocaleDateString('en-US', options)
     }))
+    
     onClose()
   }
 
@@ -82,6 +109,8 @@ const TaskForm: FC<TaskFormProps> = ({onClose}) => {
               value={formData.title}
               onChange={handleChange}
             />
+            {errors.title && <span className={style.errorText}>{errors.title}</span>}
+
             <textarea 
               className={style.taskFormDescrp} 
               name="description"
@@ -90,6 +119,7 @@ const TaskForm: FC<TaskFormProps> = ({onClose}) => {
               placeholder="Add description..."
             >
             </textarea>
+            {errors.description && <span className={style.errorText}>{errors.description}</span>}
 
             <div className={style.taskFormBottom}>
               <div className={style.selectWrapper}>

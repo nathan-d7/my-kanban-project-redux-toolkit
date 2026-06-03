@@ -104,3 +104,16 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.errorText {
+  color: #f75a68; 
+  font-size: 0.8rem;
+  margin-top: -4px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.taskFormInput:has(+ .errorText), 
+.taskFormDescrp:has(+ .errorText) {
+  border-color: #f75a68;
+}

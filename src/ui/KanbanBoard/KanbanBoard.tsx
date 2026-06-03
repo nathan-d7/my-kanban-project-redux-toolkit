@@ -15,13 +15,17 @@ const KanbanBoard: FC = () => {
   const searchQuery = useAppSelector(state => state.board.searchQuery)
 
   const tasksStore = useAppSelector(state => state.board.tasks) 
+  const selectedPriorities = useAppSelector(state => state.board.selectedPriorities)
 
   const tasksStoreQuery = tasksStore.filter(t => {
 
     const matchesTitle = t.title.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesDescription = t.description.toLowerCase().includes(searchQuery.toLowerCase())
 
-    return matchesTitle || matchesDescription
+    const matchesSearch = matchesTitle || matchesDescription
+
+    const matchesPriorities = selectedPriorities.length === 0 || selectedPriorities.includes(t.priority)
+    return matchesSearch && matchesPriorities
 
   })
 

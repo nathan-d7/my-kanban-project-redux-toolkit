@@ -1,0 +1,89 @@
+.priorFilterContainer {
+  position: relative;
+}
+
+.filterButton {
+  cursor: pointer;
+}
+
+.popUpWindow {
+  max-width: 250px;
+  min-width: 200px;
+  position: absolute;
+  top: 35px;
+  background-color: rgba(36, 105, 148, 0.948);
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.popUpWindowTitle {
+  margin-bottom: 10px;
+}
+
+.checkBoxGroup {
+
+}
+
+.popUpWindowApplyButtonText {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.checkBoxLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 6px 0;
+  user-select: none;
+}
+
+.checkBoxLabel:hover .customCheckbox {
+  border-color: #79c7ff;
+  box-shadow: 0 0 8px rgba(78, 168, 222, 0.3);
+}
+
+.hiddenCheckbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.customCheckbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #449ed6; 
+  border-radius: 4px; 
+  position: relative;
+  display: inline-block;
+  background-color: transparent;
+  transition: border-color 0.2s;
+}
+
+.customCheckbox::after {
+  content: "";
+  position: absolute;
+  display: none; 
+  width: 5px;
+  height: 9px;
+  left: 5px;
+  top: 1px;
+  border: 2px solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.labelText {
+  color: #e1e1e6;
+  font-size: 0.95rem;
+}
+
+.hiddenCheckbox:checked + .labelText + .customCheckbox {
+  border-color: #ffcc00;
+}
+
+.hiddenCheckbox:checked + .labelText + .customCheckbox::after {
+  display: block;
+}

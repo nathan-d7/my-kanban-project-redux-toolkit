@@ -1,11 +1,30 @@
 .toolBarContainer {
-
+  min-width: 80%;
+  margin-top: 14px;
+  margin-bottom: 16px;
 }
 
 .toolBarBox {
-
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .toolBarInput {
-  
+  width: 80%;
+  padding: 8px 0 8px 10px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  background-color: #26262b;
+  color: #ffffffd1;
+  font-size: 1rem;
+}
+
+.toolBarInput:focus {
+  border: 1px solid transparent;
+  box-shadow: 0 0 0 2px #ffcc00;
 }

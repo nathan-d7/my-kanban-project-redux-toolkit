@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import style from './ToolBar.module.css'
 import { setSearchQuery } from '../../features/board/boardSlice'
+import PriorityFilter from '../../components/TaskForm/PriorityFilter/PriorityFilter'
 
 const ToolBar: FC = () => {
 
@@ -17,7 +18,8 @@ const ToolBar: FC = () => {
   return (
     <section className={style.toolBarContainer}>
       <div className={style.toolBarBox}>
-        <input className={style.toolBarInput} type="text" value={value} onChange={handleInputChange}/>
+        <input className={style.toolBarInput} type="text" value={value} placeholder='Title or description' onChange={handleInputChange}/>
+        <PriorityFilter />
       </div>
     </section>
   )
