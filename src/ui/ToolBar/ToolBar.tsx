@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import style from './ToolBar.module.css'
 import { setSearchQuery } from '../../features/board/boardSlice'
-import PriorityFilter from '../../components/TaskForm/PriorityFilter/PriorityFilter'
+import PriorityFilter from '../../components/PriorityFilter/PriorityFilter'
 
 const ToolBar: FC = () => {
 

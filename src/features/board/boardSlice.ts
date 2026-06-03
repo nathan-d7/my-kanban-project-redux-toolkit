@@ -1,33 +1,24 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 import type { BoardState, Task, ColumnStatus } from "./types"
 
+const loadTasksFromLocalStorage = (): Task[] => {
+  const rawData = localStorage.getItem('kanban-tasks')
+  if(!rawData) return []
+
+  try {
+    return JSON.parse(rawData) as Task[]
+  } catch (error) {
+    console.error("Error parsing tasks from LocalStorage:", error)
+    return []
+  }
+}
+
+const saveTasksToLocalStorage = (tasks: Task[]): void => {
+  localStorage.setItem('kanban-tasks', JSON.stringify(tasks))
+}
+
 const initialState: BoardState = {
-  tasks: [
-    {
-      id: '1',
-      title: 'Изучить основы Redux Toolkit',
-      description: 'Разобраться с configureStore, createSlice и типизацией',
-      status: 'in-progress',
-      priority: 'high',
-      createdAt: new Date().toLocaleDateString(),
-    },
-    {
-      id: '2',
-      title: 'Сделать стильную верстку доски',
-      description: 'Написать CSS-модули для темной темы приложения',
-      status: 'todo',
-      priority: 'medium',
-      createdAt: new Date().toLocaleDateString(),
-    },
-    {
-      id: '3',
-      title: 'Повторить TypeScript',
-      description: 'Повторить интерфейсы, типы и generics',
-      status: 'done',
-      priority: 'low',
-      createdAt: new Date().toLocaleDateString(),
-    }
-  ],
+  tasks: loadTasksFromLocalStorage(),
   searchQuery: '',
   selectedPriorities: []
 }
@@ -43,9 +34,11 @@ export const boardSlice = createSlice({
   reducers: {
     addTask(state, action: PayloadAction<Task>) {
       state.tasks.push(action.payload)
+      saveTasksToLocalStorage(state.tasks)
     },
     deleteTasks(state, action: PayloadAction<string>) {
       state.tasks = state.tasks.filter(task => task.id !== action.payload)
+      saveTasksToLocalStorage(state.tasks)
     },
     moveTask(state, action: PayloadAction<MoveTaskPayload>) {
       const task = state.tasks.find(t => t.id === action.payload.id)
@@ -53,6 +46,8 @@ export const boardSlice = createSlice({
       if(task) {
         task.status = action.payload.newStatus
       }
+
+      saveTasksToLocalStorage(state.tasks)
     },
     setSearchQuery(state, action: PayloadAction<string>) {
       state.searchQuery = action.payload

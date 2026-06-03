@@ -3,8 +3,8 @@ import { IconButton } from "@mui/material"
 import SortRoundedIcon from '@mui/icons-material/SortRounded'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import style from "./PriorityFilter.module.css"
-import { useAppDispatch } from "../../../app/hooks"
-import { setPrioritiesFilter } from "../../../features/board/boardSlice"
+import { useAppDispatch } from "../../app/hooks"
+import { setPrioritiesFilter } from "../../features/board/boardSlice"
 
 const PriorityFilter: FC = () => {
 
