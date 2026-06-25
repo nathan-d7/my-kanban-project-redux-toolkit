@@ -48,6 +48,7 @@ export const boardSlice = createSlice({
       }
 
       saveTasksToLocalStorage(state.tasks)
+      
     },
     setSearchQuery(state, action: PayloadAction<string>) {
       state.searchQuery = action.payload

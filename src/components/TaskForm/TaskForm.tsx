@@ -130,9 +130,9 @@ const TaskForm: FC<TaskFormProps> = ({onClose}) => {
                   onChange={handleChange}
                   className={style.taskFormSelect}
                 >
-                  <option id="low">Low</option>
-                  <option id="medium">Medium</option>
-                  <option id="high">High</option>
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
                 </select>
               </div>
               <IconButton 

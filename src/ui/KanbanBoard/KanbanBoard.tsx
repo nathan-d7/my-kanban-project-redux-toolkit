@@ -1,18 +1,23 @@
 import  {type FC, useState } from "react"
-import { useAppSelector } from "../../app/hooks"
-import type { Task } from "../../features/board/types"
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
+import { DndContext } from "@dnd-kit/core"
+import type { DragEndEvent } from "@dnd-kit/core"
+import { moveTask } from "../../features/board/boardSlice"
 import Column from "../Column/Column"
 import TaskForm from "../../components/TaskForm/TaskForm"
 import ToolBar from "../../ui/ToolBar/ToolBar"
 import { IconButton } from "@mui/material"
 import AddIcon from '@mui/icons-material/Add'
 import style from "./KanbanBoard.module.css"
+import type { ColumnStatus } from "../../features/board/types"
 
 
 const KanbanBoard: FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
   const searchQuery = useAppSelector(state => state.board.searchQuery)
+
+  const dispatch = useAppDispatch()
 
   const tasksStore = useAppSelector(state => state.board.tasks) 
   const selectedPriorities = useAppSelector(state => state.board.selectedPriorities)
@@ -29,11 +34,30 @@ const KanbanBoard: FC = () => {
 
   })
 
-  console.dir(tasksStoreQuery)
+  console.log('Стейт в компоненте:', {
+  search: searchQuery,
+  priorities: selectedPriorities,
+  allTasks: tasksStore
+});
 
   const toDoTasks = tasksStoreQuery.filter(t => t.status === 'todo')
   const inProgressTasks = tasksStoreQuery.filter(t => t.status === 'in-progress')
   const doneTasks = tasksStoreQuery.filter(t => t.status === 'done') 
+
+  const handleDragEnd = (e: DragEndEvent) => {
+
+    const {active, over} = e
+    if(!over) return
+
+    const taskId = active.id as string
+    const newStatus = over.id as ColumnStatus
+
+    dispatch(moveTask({
+      id: taskId,
+      newStatus
+    }))
+
+  }
 
 
   return (
@@ -66,12 +90,13 @@ const KanbanBoard: FC = () => {
 
       <ToolBar />
 
-
-      <div className={style.boardGrid}>
-        <Column title='Backlog' status='todo' tasks={toDoTasks}/>
-        <Column title='In Progress' status='in-progress' tasks={inProgressTasks}/>
-        <Column title='Done' status='done' tasks={doneTasks}/>
-      </div>
+      <DndContext onDragEnd={handleDragEnd}>
+        <div className={style.boardGrid}>
+          <Column title='Backlog' status='todo' tasks={toDoTasks}/>
+          <Column title='In Progress' status='in-progress' tasks={inProgressTasks}/>
+          <Column title='Done' status='done' tasks={doneTasks}/>
+        </div>
+      </DndContext>
 
       {isModalOpen && <TaskForm onClose={() => setIsModalOpen(false)}/>}
     </section>

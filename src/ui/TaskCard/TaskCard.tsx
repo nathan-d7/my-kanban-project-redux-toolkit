@@ -5,6 +5,7 @@ import { deleteTasks, moveTask } from "../../features/board/boardSlice"
 import { IconButton } from "@mui/material"
 import SwipeRightAltIcon from "@mui/icons-material/SwipeRightAlt"
 import SwipeLeftAltIcon from "@mui/icons-material/SwipeLeftAlt"
+import { useDraggable } from "@dnd-kit/core"
 import style from "./TaskCard.module.css"
 
 type TaskCardProps = {
@@ -13,6 +14,8 @@ type TaskCardProps = {
 }
 
 const TaskCard: FC<TaskCardProps> = ({task, status}) => {
+
+  const dispatch = useAppDispatch()
 
   const handleMoveLeft = () => {
     let nextStatus: ColumnStatus = 'todo'
@@ -30,12 +33,15 @@ const TaskCard: FC<TaskCardProps> = ({task, status}) => {
     dispatch(moveTask({id: task.id, newStatus: nextStatus}))
   }
 
-
   const arrowRight = 
     <IconButton 
       size="medium" 
       className="taskcard__arrow-btn"
-      onClick={() => handleMoveRight()}
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => { 
+        e.stopPropagation()
+        handleMoveRight() 
+      }}
     >
       <SwipeRightAltIcon />
     </IconButton>
@@ -44,15 +50,31 @@ const TaskCard: FC<TaskCardProps> = ({task, status}) => {
     <IconButton 
       size="medium" 
       className="taskcard__arrow-btn"
-       onClick={() => handleMoveLeft()}
+       onPointerDown={(e) => e.stopPropagation()}
+       onClick={(e) => { 
+        e.stopPropagation()
+        handleMoveLeft() 
+      }}
     >
       <SwipeLeftAltIcon/>
     </IconButton>
 
-  const dispatch = useAppDispatch()
+  const {attributes, listeners, setNodeRef, transform} = useDraggable({
+    id: task.id
+  })
+
+  const draggableCardStyle = transform ? 
+    {transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`} :
+    undefined
 
   return (
-    <div className={style.taskcardContainer}>
+    <div 
+      className={style.taskcardContainer} 
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      style={draggableCardStyle}
+    >
       <div className="taskcard__box">
         <h3 className={style.taskcardTitle}>{task.title}</h3>
         <p className={style.taskcardDescr}>{task.description}</p>
@@ -65,9 +87,13 @@ const TaskCard: FC<TaskCardProps> = ({task, status}) => {
         <div className={style.taskcardControlsBox}>
           <button 
             className={style.taskcardDeleteBtn}
-            onClick={() => dispatch(deleteTasks(task.id))}
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => { 
+              e.stopPropagation()
+              dispatch(deleteTasks(task.id)) 
+            }}
           >
-              &times;
+            &times;
           </button>
 
           <div className={style.taskcardArrowsBox}>
